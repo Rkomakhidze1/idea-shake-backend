@@ -31,7 +31,9 @@ export class PostsService {
   }
 
   async findOne(id: number) {
-    const found = await this.postsRepository.findOne(id);
+    const found = await this.postsRepository.findOne(id, {
+      relations: ['author'],
+    });
 
     if (!found) {
       throw new NotFoundException(`Post with ID "${id}" not found`);
