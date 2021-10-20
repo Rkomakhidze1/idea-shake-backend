@@ -4,6 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { User } from 'src/auth/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsRepository } from './posts.repository';
 
@@ -14,17 +16,18 @@ export class PostsService {
     private postsRepository: PostsRepository,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto, user: User) {
     try {
-      const post = await this.postsRepository.createPost(createPostDto);
-      return post;
+      const post = await this.postsRepository.createPost(createPostDto, user);
+      return post.toResponseObject();
     } catch (e) {
       throw new BadRequestException(e.message);
     }
   }
 
   async findAll() {
-    return this.postsRepository.find({});
+    const posts = await this.postsRepository.find({ relations: ['author'] });
+    return posts.map((post) => post.toResponseObject());
   }
 
   async findOne(id: number) {

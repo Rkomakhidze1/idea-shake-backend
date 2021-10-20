@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/shared/get-user.decorator';
+import { User } from '../auth/entities/user.entity';
 
 @UseGuards(AuthGuard())
 @Controller('posts')
@@ -9,8 +11,9 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
+    console.log(user);
+    return this.postsService.create(createPostDto, user);
   }
 
   @Get()
