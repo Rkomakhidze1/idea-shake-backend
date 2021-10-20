@@ -27,8 +27,7 @@ export class PostsService {
     return this.postsRepository.find({});
   }
 
-  async findOne(id: string) {
-    console.log(id);
+  async findOne(id: number) {
     const found = await this.postsRepository.findOne(id);
 
     if (!found) {

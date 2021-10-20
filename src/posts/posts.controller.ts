@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard())
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -18,6 +20,6 @@ export class PostsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
+    return this.postsService.findOne(+id);
   }
 }
